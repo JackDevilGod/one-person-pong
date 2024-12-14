@@ -9,7 +9,7 @@ render_queue: list = []
 running: bool = True
 
 
-def render(screen: pygame.Surface, clock: pygame.time.Clock):
+def render(screen: pygame.Surface, clock: pygame.time.Clock, frame_rate: float):
     while running:
         screen.fill("black")
 
@@ -18,7 +18,7 @@ def render(screen: pygame.Surface, clock: pygame.time.Clock):
 
         pygame.display.flip()
 
-        clock.tick(999)
+        clock.tick(frame_rate)
 
 
 def main():
@@ -27,20 +27,22 @@ def main():
     # overall game settings
     pygame.init()
     screen_width, screen_height = (1280, 720)
+    frame_rate: float = 999
+    simulation_rate: float = 165
     screen = pygame.display.set_mode((screen_width, screen_height))
     clock = pygame.time.Clock()
 
     # player paddle set up
     player_paddle = pygame.Rect(0, 0, 25, 100).move(pygame.Vector2(0, screen.get_height() / 2))
-    player_speed = 50
+    player_speed: float = 2500 / simulation_rate
 
     # ball set up
     ball = pygame.Rect(0, 0, 25, 25).move(pygame.Vector2(screen.get_width() / 2,
                                                          screen.get_height() / 2))
-    ball_velocity: int = 5
+    ball_velocity: float = 250 / simulation_rate
     ball_angle: float = random.uniform(0.25 * pi, 0.75 * pi)
 
-    render_thread = threading.Thread(target=render, args=(screen, clock,))
+    render_thread = threading.Thread(target=render, args=(screen, clock, frame_rate,))
     render_thread.start()
     while running:
         for event in pygame.event.get():
@@ -51,7 +53,7 @@ def main():
 
         # region player logic
         pre_render_queue.append(player_paddle)
-        move_player: tuple[int, int] = (0, 0)
+        move_player: tuple[float, float] = (0, 0)
         paddle_top, paddle_bottom, paddle_right = (player_paddle.top, player_paddle.bottom,
                                                    player_paddle.right)
 
@@ -110,7 +112,7 @@ def main():
 
         render_queue = pre_render_queue
 
-        sleep(1/60)
+        sleep(1/simulation_rate)
 
 
 if __name__ == '__main__':
