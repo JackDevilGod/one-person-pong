@@ -1,7 +1,7 @@
 import pygame
 import random
-from math import (atan2, cos, sin, pi)
 import threading
+from math import (atan2, cos, sin)
 from time import sleep
 
 
@@ -38,8 +38,7 @@ def main():
     ball = pygame.Rect(0, 0, 25, 25).move(pygame.Vector2(screen.get_width() / 2,
                                                          screen.get_height() / 2))
     ball_velocity: int = 5
-    ball_angle: float = 0
-    # atan2(random.randint(-100, 100), random.randint(1, 100))
+    ball_angle: float = atan2(random.randint(-100, 100), random.randint(1, 100))
 
     render_thread = threading.Thread(target=render, args=(screen, clock,))
     render_thread.start()
@@ -86,10 +85,10 @@ def main():
             else:
                 ball_offset.append(screen_width - ball_right)
 
-        if ball_top + ball_y_offset <= screen_height and ball_bottom + ball_y_offset >= 0:
+        if ball_bottom + ball_y_offset <= screen_height and ball_top + ball_y_offset >= 0:
             ball_offset.append(ball_y_offset)
         else:
-            if ball_x_offset < 0:
+            if ball_y_offset < 0:
                 ball_offset.append(-ball_top)
             else:
                 ball_offset.append(screen_height - ball_bottom)
