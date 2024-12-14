@@ -31,7 +31,7 @@ def main():
     clock = pygame.time.Clock()
 
     # player paddle set up
-    player_paddle = pygame.Rect(0, 0, 25, 100)
+    player_paddle = pygame.Rect(0, 0, 25, 100).move(pygame.Vector2(0, screen.get_height() / 2))
     player_speed = 50
 
     # ball set up
