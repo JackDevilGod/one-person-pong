@@ -112,8 +112,6 @@ def main():
 
         sleep(1/60)
 
-    render_thread.join()
-
 
 if __name__ == '__main__':
     main()
