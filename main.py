@@ -34,12 +34,12 @@ def main():
 
     # player paddle set up
     player_paddle = pygame.Rect(0, 0, 25, 100).move(pygame.Vector2(0, screen.get_height() / 2))
-    player_speed: float = 2500 / simulation_rate
+    player_speed: float = 3000 / simulation_rate
 
     # ball set up
     ball = pygame.Rect(0, 0, 25, 25).move(pygame.Vector2(screen.get_width() / 2,
                                                          screen.get_height() / 2))
-    ball_velocity: float = 250 / simulation_rate
+    ball_velocity: float = 300 / simulation_rate
     ball_angle: float = random.uniform(0.25 * pi, 0.75 * pi)
 
     render_thread = threading.Thread(target=render, args=(screen, clock, frame_rate,))
