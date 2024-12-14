@@ -1,7 +1,7 @@
 import pygame
 import random
 import threading
-from math import (atan2, cos, sin)
+from math import (atan2, cos, sin, pi)
 from time import sleep
 
 
@@ -35,8 +35,8 @@ def main():
     player_speed = 50
 
     # ball set up
-    ball = pygame.Rect(0, 0, 25, 25).move(pygame.Vector2(screen.get_width() / 2,
-                                                         screen.get_height() / 2))
+    ball = pygame.Rect(0, 0, 25, 25).move(pygame.Vector2(screen.get_width() / 2, 0))
+    #                                                     screen.get_height() / 2))
     ball_velocity: int = 5
     ball_angle: float = atan2(random.randint(-100, 100), random.randint(1, 100))
 
@@ -52,7 +52,8 @@ def main():
         # region player logic
         pre_render_queue.append(player_paddle)
         move_player: tuple[int, int] = (0, 0)
-        paddle_top, paddle_bottom = player_paddle.top, player_paddle.bottom
+        paddle_top, paddle_bottom, paddle_right = (player_paddle.top, player_paddle.bottom,
+                                                   player_paddle.right)
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
@@ -77,21 +78,32 @@ def main():
 
         ball_top, ball_bottom, ball_left, ball_right = ball.top, ball.bottom, ball.left, ball.right
 
-        if ball_right + ball_x_offset <= screen_width and ball_left + ball_x_offset >= 0:
-            ball_offset.append(ball_x_offset)
+        if (ball_top + ball_y_offset >= paddle_top and
+            ball_bottom + ball_y_offset <= paddle_bottom and
+                ball_left + ball_x_offset <= paddle_right):
+            ball_offset = [paddle_right - ball_left, ball_y_offset]
+            ball_angle = 2 * pi - ball_angle
         else:
-            if ball_x_offset < 0:
-                ball_offset.append(-ball_left)
+            if ball_right + ball_x_offset <= screen_width and ball_left + ball_x_offset >= 0:
+                ball_offset.append(ball_x_offset)
             else:
-                ball_offset.append(screen_width - ball_right)
+                if ball_x_offset < 0:
+                    ball_offset.append(-ball_left)
+                    # ball_angle = 2 * pi - ball_angle
+                    running = False
+                else:
+                    ball_offset.append(screen_width - ball_right)
+                    ball_angle = 2 * pi - ball_angle
 
-        if ball_bottom + ball_y_offset <= screen_height and ball_top + ball_y_offset >= 0:
-            ball_offset.append(ball_y_offset)
-        else:
-            if ball_y_offset < 0:
-                ball_offset.append(-ball_top)
+            if ball_bottom + ball_y_offset <= screen_height and ball_top + ball_y_offset >= 0:
+                ball_offset.append(ball_y_offset)
             else:
-                ball_offset.append(screen_height - ball_bottom)
+                if ball_y_offset < 0:
+                    ball_offset.append(-ball_top)
+                    ball_angle = pi - ball_angle
+                else:
+                    ball_offset.append(screen_height - ball_bottom)
+                    ball_angle = pi - ball_angle
 
         ball = ball.move(tuple(ball_offset))
         # endregion end ball logic
