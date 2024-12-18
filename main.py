@@ -29,6 +29,7 @@ def main():
     screen_width, screen_height = (1280, 720)
     frame_rate: float = 999
     simulation_rate: float = 165
+
     screen = pygame.display.set_mode((screen_width, screen_height))
     clock = pygame.time.Clock()
 
