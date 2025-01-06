@@ -1,6 +1,8 @@
 import pygame
 import random
 import threading
+
+from copy import deepcopy
 from math import (cos, sin, pi, atan2)
 from time import sleep
 
@@ -13,7 +15,7 @@ def render(screen: pygame.Surface, clock: pygame.time.Clock, frame_rate: float):
     while running:
         screen.fill("black")
 
-        for object in render_queue:
+        for object in deepcopy(render_queue):
             pygame.draw.rect(screen, pygame.Color(255, 255, 255), object)
 
         pygame.display.flip()
@@ -123,3 +125,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
